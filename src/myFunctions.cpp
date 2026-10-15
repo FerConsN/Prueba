@@ -20,7 +20,7 @@ void moveGripperPivot(float angle){
 void gripMode(){
     //elevateToDistance(75);
     moveGripperPivot(70);
-    Gripper.move_velocity(100);
+    //Gripper.move_velocity(100);
 }
 
 

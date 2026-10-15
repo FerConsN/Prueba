@@ -128,6 +128,14 @@ void opcontrol() {
 		} else{
 			Elevator.brake();
 		}
+
+		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+			Gripper.move_velocity(180);
+		} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+			Gripper.move_velocity(-180);
+		} else{
+			Gripper.brake();
+		}
 	
 		/*powerIntake = master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1 ? 12000 :
 		master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) ? -12000 : 0; */
@@ -136,7 +144,7 @@ void opcontrol() {
 			gripMode();
 		}
 
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
+		/*if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
 			Grip = !Grip;
 		}
 		
@@ -146,7 +154,7 @@ void opcontrol() {
 			Gripper.move(0);
 		} else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
 			Gripper.move(0);
-		}
+		}*/
 
 		std::tie(leftSpeed, rightSpeed) = driveSpeeds();
 		LeftMotors.move(leftSpeed);
