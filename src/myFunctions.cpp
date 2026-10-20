@@ -23,6 +23,15 @@ void gripMode(){
     Gripper.move_velocity(100);
 }
 
+void gripGrab(){
+    Gripper.move_velocity(100);
+}
+
+void gripGive(){
+    
+    Gripper.move_velocity(-67);
+}
+
 
 void elevateToDistance(float distance){
     Elevator.move_absolute(0, 100);

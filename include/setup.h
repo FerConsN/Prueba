@@ -8,6 +8,7 @@
 
 #define DEADBAND 8.0
 
+#define GEAR_RATIO 60/36
 
 /*extern pros::Motor frontLeftMotor;
 extern pros::Motor backLeftMotor;

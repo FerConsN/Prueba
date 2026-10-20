@@ -132,6 +132,15 @@ void opcontrol() {
 		/*powerIntake = master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1 ? 12000 :
 		master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) ? -12000 : 0; */
 
+		//ALEX GRIPPER TOGLE L1,L2
+		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+			gripGrab();
+		} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+			gripGive();
+		} else{
+			Gripper.brake();
+		}
+
 		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
 			gripMode();
 		}
@@ -141,7 +150,7 @@ void opcontrol() {
 		}
 		
 		if (Grip){
-			Gripper.move(-80);
+			Gripper.move(-82);
 		} else if (!Grip) {
 			Gripper.move(0);
 		} else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
@@ -173,6 +182,6 @@ void opcontrol() {
 		LeftMotors.move(yRaw + turn);
 		RightMotors.move(yRaw - turn);*/
 
-		pros::delay(30);
+		pros::delay(20);
 	}
 }
