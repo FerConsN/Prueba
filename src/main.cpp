@@ -2,6 +2,8 @@
 #include "cmath"
 #include "liblvgl/llemu.hpp"
 //#include "numbers"
+#include "cmath"
+#include "liblvgl/llemu.hpp"
 #include "setup.h"
 #include "myFunctions.h"
 
@@ -28,16 +30,31 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
+ void pantalla_odometria_task(void* param) {
+    while (true) {
+        // Obtener la posición actual del chasis (X, Y en pulgadas, Heading en grados)
+        lemlib::Pose pose = chassis.getPose();
+        
+        // Imprimir en las líneas de la pantalla LCD del cerebro V5
+        pros::lcd::set_text(3, "X (Pulgadas): " + std::to_string(pose.x));
+        pros::lcd::set_text(4, "Y (Pulgadas): "+ std::to_string(pose.y));
+        pros::lcd::set_text(5, "Giro (Grados): " + std::to_string(pose.theta));
+        
+        pros::delay(50); // Se actualiza cada 50ms para no saturar el procesador
+    }
+}
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-	Elevator.tare_position();
-	GripperPivot.tare_position();
+	pros::lcd::set_text(1, "odometria lista");
+	//Elevator.tare_position();
+	//GripperPivot.tare_position();
 
 	pros::lcd::register_btn1_cb(on_center_button);
 
-	imu.reset();
-	pros::delay(3000);
+	chassis.calibrate();
+
+	pros::Task pantallaTask(pantalla_odometria_task, nullptr, "Pantalla Odom");
 }
 
 /**
@@ -70,14 +87,21 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	
-	while(!pushButton.get_value()){
-		LeftMotors.move_velocity(-100);
-		RightMotors.move_velocity(-100);
-	}
 
-	LeftMotors.brake();
-	RightMotors.brake();
+	pros::delay(200);
+	
+	chassis.setPose(0, 0, 0);
+	pros::delay(50);
+
+	chassis.moveToPoint(0, 24, 2000);
+
+	//while(!pushButton.get_value()){
+		//LeftMotors.move_velocity(-100);
+		//RightMotors.move_velocity(-100);
+	//}
+
+	//LeftMotors.brake();
+	//RightMotors.brake();
 	
 }
 
@@ -106,7 +130,7 @@ void opcontrol() {
 
 	int powerIntake = 0; */
 
-	bool Grip = false; 
+	//bool Grip = false; 
 
 	auto [leftSpeed,  rightSpeed] = std::tuple{0, 0};
 	
@@ -116,42 +140,42 @@ void opcontrol() {
 			elevateToDistance(2);
 		};*/
 
-		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
-			moveGripperPivot(0);
-			pros::lcd::set_text(3, "Pivot move 90");
-		}
+		//if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+			//moveGripperPivot(0);
+			//pros::lcd::set_text(3, "Pivot move 90");
+		//}
 
-		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
-			Elevator.move_velocity(200);
-		} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-			Elevator.move_velocity(-200);
-		} else{
-			Elevator.brake();
-		}
+		//if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+			//Elevator.move_velocity(200);
+		//} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+			//Elevator.move_velocity(-200);
+		//} else{
+			//Elevator.brake();
+		//}
 
-		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-			Gripper.move_velocity(180);
-		} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-			Gripper.move_velocity(-180);
-		} else{
-			Gripper.brake();
-		}
+		//if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+		//	Gripper.move_velocity(180);
+		//} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+			//Gripper.move_velocity(-180);
+		//} else{
+		//	Gripper.brake();
+		//}
 	
 		/*powerIntake = master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1 ? 12000 :
 		master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) ? -12000 : 0; */
 
 		//ALEX GRIPPER TOGLE L1,L2
-		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
-			gripGrab();
-		} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-			gripGive();
-		} else{
-			Gripper.brake();
-		}
+		//if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+			//gripGrab();
+		//} else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+			//gripGive();
+		//} else{
+			//Gripper.brake();
+		//}
 
-		if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
-			gripMode();
-		}
+		//if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+			//gripMode();
+		//}
 
 		/*if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){
 			Grip = !Grip;

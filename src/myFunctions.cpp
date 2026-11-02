@@ -11,7 +11,7 @@ float distanceToAngle(float distance, float conversionFactor, float gearRatio){
     return angle;
 }
 //24.6875
-
+/*
 void moveGripperPivot(float angle){
     float position = angle * 3;
     GripperPivot.move_absolute(position, 200);
@@ -37,6 +37,7 @@ void elevateToDistance(float distance){
     Elevator.move_absolute(0, 100);
         //distanceToAngle(distance, ELEVATOR_CONVERSION_FACTOR , 1), 100);
 }
+*/
 
 float applyDeadband(int value){
     if(std::abs(value) < DEADBAND){
